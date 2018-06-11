@@ -1,0 +1,72 @@
+*** myalexnet_forward_newtf.py	2018-06-11 00:28:08.961479718 +0100
+--- myalexnet_forward_newtf_libroute.py	2018-06-11 00:40:38.270010522 +0100
+***************
+*** 24,30 ****
+  from scipy.ndimage import filters
+  import urllib
+  from numpy import random
+! 
+  
+  import tensorflow as tf
+  
+--- 24,31 ----
+  from scipy.ndimage import filters
+  import urllib
+  from numpy import random
+! import sys
+! import StringIO
+  
+  import tensorflow as tf
+  
+***************
+*** 40,52 ****
+  ################################################################################
+  #Read Image, and change to BGR
+  
+! 
+! im1 = (imread("laska.png")[:,:,:3]).astype(float32)
+! im1 = im1 - mean(im1)
+! im1[:, :, 0], im1[:, :, 2] = im1[:, :, 2], im1[:, :, 0]
+! 
+! im2 = (imread("poodle.png")[:,:,:3]).astype(float32)
+! im2[:, :, 0], im2[:, :, 2] = im2[:, :, 2], im2[:, :, 0]
+  
+  
+  ################################################################################
+--- 41,52 ----
+  ################################################################################
+  #Read Image, and change to BGR
+  
+! im_data = sys.stdin.read()
+! im_memfile = StringIO.StringIO(im_data)
+! im = (imread(im_memfile)[:,:,:3]).astype(float32)
+! #im = (imread("laska.png")[:,:,:3]).astype(float32)
+! im = im - mean(im)
+! im[:, :, 0], im[:, :, 2] = im[:, :, 2], im[:, :, 0]
+  
+  
+  ################################################################################
+***************
+*** 197,203 ****
+  sess.run(init)
+  
+  t = time.time()
+! output = sess.run(prob, feed_dict = {x:[im1,im2]})
+  ################################################################################
+  
+  #Output:
+--- 197,203 ----
+  sess.run(init)
+  
+  t = time.time()
+! output = sess.run(prob, feed_dict = {x:[im]})
+  ################################################################################
+  
+  #Output:
+***************
+*** 209,212 ****
+      for i in range(5):
+          print(class_names[inds[-1-i]], output[input_im_ind, inds[-1-i]])
+  
+- print(time.time()-t)
+--- 209,211 ----
